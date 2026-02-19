@@ -1,52 +1,104 @@
-import { useEffect } from "react";
-import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
+import { useState, useEffect } from 'react';
+import '@/App.css';
+import axios from 'axios';
+import MainMenu from '@/components/MainMenu';
+import GameScreen from '@/components/GameScreen';
+import LevelEditor from '@/components/LevelEditor';
+import { DEFAULT_LEVELS } from '@/game/DefaultLevels';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-const Home = () => {
-  const helloWorldApi = async () => {
+function App() {
+  const [screen, setScreen] = useState('menu'); // menu, game, editor
+  const [gameMode, setGameMode] = useState(null); // human_vs_ai, ai_vs_ai
+  const [selectedLevel, setSelectedLevel] = useState(null);
+  const [customLevels, setCustomLevels] = useState([]);
+  const [allLevels, setAllLevels] = useState(DEFAULT_LEVELS); // Initialize with default levels
+
+  useEffect(() => {
+    loadLevels();
+  }, []);
+
+  const loadLevels = async () => {
     try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
+      const response = await axios.get(`${API}/levels`);
+      setCustomLevels(response.data);
+      setAllLevels([...DEFAULT_LEVELS, ...response.data]);
+    } catch (error) {
+      console.error('Failed to load custom levels:', error);
+      setAllLevels(DEFAULT_LEVELS);
     }
   };
 
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
+  const handlePlayMode = (mode, level) => {
+    setGameMode(mode);
+    setSelectedLevel(level);
+    setScreen('game');
+  };
 
-  return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
-  );
-};
+  const handleBackToMenu = () => {
+    setScreen('menu');
+    setGameMode(null);
+    setSelectedLevel(null);
+  };
 
-function App() {
+  const handleOpenEditor = () => {
+    setScreen('editor');
+  };
+
+  const handleSaveLevel = async (levelData) => {
+    try {
+      await axios.post(`${API}/levels`, levelData);
+      await loadLevels();
+      alert('Level saved successfully!');
+    } catch (error) {
+      console.error('Failed to save level:', error);
+      alert('Failed to save level');
+    }
+  };
+
+  const handleDeleteLevel = async (levelId) => {
+    try {
+      await axios.delete(`${API}/levels/${levelId}`);
+      await loadLevels();
+    } catch (error) {
+      console.error('Failed to delete level:', error);
+    }
+  };
+
+  const saveMatchResult = async (result) => {
+    try {
+      await axios.post(`${API}/matches`, result);
+    } catch (error) {
+      console.error('Failed to save match result:', error);
+    }
+  };
+
   return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      {screen === 'menu' && (
+        <MainMenu
+          onPlayMode={handlePlayMode}
+          onOpenEditor={handleOpenEditor}
+          levels={allLevels}
+          onDeleteLevel={handleDeleteLevel}
+        />
+      )}
+      {screen === 'game' && (
+        <GameScreen
+          mode={gameMode}
+          level={selectedLevel}
+          onBack={handleBackToMenu}
+          onSaveResult={saveMatchResult}
+        />
+      )}
+      {screen === 'editor' && (
+        <LevelEditor
+          onBack={handleBackToMenu}
+          onSave={handleSaveLevel}
+        />
+      )}
     </div>
   );
 }
