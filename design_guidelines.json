@@ -1,0 +1,170 @@
+{
+  "identity": {
+    "name": "E1",
+    "role": "Anti-AI Creative Designer",
+    "mission": "Create a 'Level Devil' inspired platformer that feels like a dangerous, high-stakes digital artifact, not a website.",
+    "tone": "Sharp, Kinetic, Minimalist, Deceptive, 'Glitch-Void'",
+    "aesthetic_goals": [
+      "No standard SaaS UI patterns. Everything must feel like a game HUD.",
+      "High contrast: Deepest Void Black vs. Blinding Neon.",
+      "Motion is mandatory: UI elements must slide, glitch, or bounce like game physics.",
+      "Typography must be machine-like and aggressive."
+    ]
+  },
+  "typography": {
+    "primary_font": {
+      "name": "Chakra Petch",
+      "weights": ["400", "500", "600", "700"],
+      "usage": "Headings, Buttons, Level Titles, 'GAME OVER' screens",
+      "cdn_url": "https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&display=swap"
+    },
+    "secondary_font": {
+      "name": "Rajdhani",
+      "weights": ["400", "500", "600"],
+      "usage": "Body text, Leaderboard data, Tooltips, Editor UI",
+      "cdn_url": "https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600&display=swap"
+    },
+    "rules": [
+      "Use UPPERCASE for all interactive buttons and section headers.",
+      "Headings should have tight tracking (-0.02em) to feel compact and sturdy.",
+      "Data numbers (scores, times) must use tabular-nums for alignment."
+    ]
+  },
+  "colors": {
+    "palette": {
+      "background": {
+        "void": "#050505",
+        "void_light": "#0F0F11",
+        "surface": "#1A1A1E",
+        "overlay": "rgba(5, 5, 5, 0.85)"
+      },
+      "brand": {
+        "primary": "#00F0FF", 
+        "primary_dim": "rgba(0, 240, 255, 0.1)",
+        "danger": "#FF003C", 
+        "danger_dim": "rgba(255, 0, 60, 0.1)",
+        "success": "#39FF14", 
+        "success_dim": "rgba(57, 255, 20, 0.1)",
+        "warning": "#FAFF00"
+      },
+      "neutral": {
+        "white": "#EDEDED",
+        "grey": "#888899",
+        "dark_grey": "#333336"
+      }
+    },
+    "usage_rules": [
+      "Backgrounds are predominantly Void Black (#050505).",
+      "Use 'Danger Red' (#FF003C) for traps, spikes, and 'Delete' actions.",
+      "Use 'Neon Cyan' (#00F0FF) for the player character, primary buttons, and active states.",
+      "Use 'Neon Lime' (#39FF14) for the goal/finish line and success messages.",
+      "Glassmorphism should be dark and tinted: bg-black/40 with backdrop-blur-md and a 1px border of primary_dim."
+    ]
+  },
+  "visual_enhancers": {
+    "borders": "1px solid rgba(255,255,255,0.1) or active borders with neon glow.",
+    "shadows": {
+      "neon_glow": "0 0 10px rgba(0, 240, 255, 0.5), 0 0 20px rgba(0, 240, 255, 0.3)",
+      "danger_glow": "0 0 10px rgba(255, 0, 60, 0.5), 0 0 20px rgba(255, 0, 60, 0.3)"
+    },
+    "textures": [
+      "Subtle scanline overlay (CSS repeating-linear-gradient) on the main background.",
+      "Grid pattern (CSS radial-gradient dots or lines) to denote 'virtual space'."
+    ],
+    "shapes": [
+      "Chamfered corners (clip-path: polygon(...)) for buttons and cards.",
+      "45-degree cuts on UI containers."
+    ]
+  },
+  "layout": {
+    "structure": {
+      "game_container": "Centered, fixed aspect ratio (e.g., 16:9), surrounded by distinct UI 'HUD'.",
+      "main_menu": "Central axis. Big title. Play button pulsing. Background is a slow-moving geometric loop.",
+      "level_select": "Bento Grid. Cards are square or 2:1 rectangles. Hover effects expand the card slightly.",
+      "editor": "Canvas in center. Toolbar floating on left (glass). Properties panel on right (glass)."
+    },
+    "spacing": "Generous. Use 'gap-8' or 'gap-12' between major sections. Inside HUDs, keep it tight ('gap-2') for functional grouping.",
+    "grid_system": "Use CSS Grid for everything. 'grid-cols-12' for main layouts. 'grid-cols-auto-fit' for level lists."
+  },
+  "components": {
+    "ui_elements": [
+      {
+        "name": "GameButton",
+        "description": "Primary action button. Large, chamfered corners, neon border. Hover: fills with neon color, text turns black. Click: scales down (0.95).",
+        "style_classes": "relative px-8 py-4 bg-transparent border-2 border-primary text-primary font-chakra font-bold text-xl uppercase tracking-widest hover:bg-primary hover:text-black transition-all duration-75 hover:shadow-[0_0_20px_rgba(0,240,255,0.6)] clip-path-chamfer"
+      },
+      {
+        "name": "LevelCard",
+        "description": "Represents a level. Dark glass background. Shows level number big. Shows 'best time' small. Lock icon if locked.",
+        "style_classes": "group relative aspect-square bg-surface/50 border border-white/10 hover:border-primary/50 flex flex-col items-center justify-center transition-all hover:scale-105 overflow-hidden"
+      },
+      {
+        "name": "NeoInput",
+        "description": "For editor or settings. Underlined or minimalist box. No default browser styles.",
+        "style_classes": "bg-transparent border-b-2 border-white/20 focus:border-primary text-white font-rajdhani px-2 py-1 outline-none transition-colors"
+      }
+    ],
+    "game_elements": [
+      {
+        "name": "PlayerBlock",
+        "visual": "Simple square. Neon Cyan fill. Slight trail effect (particle system) when moving."
+      },
+      {
+        "name": "TrapSpike",
+        "visual": "Triangle. Danger Red fill. Pulsing opacity."
+      },
+      {
+        "name": "GoalPortal",
+        "visual": "Rotating square or circle. Neon Lime outline. Particles sucking inward."
+      }
+    ]
+  },
+  "motion": {
+    "principles": [
+      "Snappy. Transitions should be fast (150ms-200ms).",
+      "Bouncy. Use spring physics for hover states.",
+      "Glitchy. On 'Game Over' or 'Trap Trigger', the UI should shake or chromatic aberration for 0.2s."
+    ],
+    "libraries": [
+      "framer-motion (Recommended for React UI)",
+      "react-spring (Alternative for physics-based UI)",
+      "canvas-confetti (For level completion)"
+    ]
+  },
+  "assets": {
+    "images": [
+      {
+        "category": "backgrounds",
+        "url": "https://images.unsplash.com/photo-1762009365851-c5b5b1aae3b9?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "description": "Abstract glowing squares (Main Menu Bg)"
+      },
+      {
+        "category": "backgrounds",
+        "url": "https://images.unsplash.com/photo-1764258560078-fe9909b3da5c?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "description": "Neon lines on black (Loading Screen / Level Select Bg)"
+      },
+      {
+        "category": "textures",
+        "url": "https://images.unsplash.com/photo-1761104169769-1aefefbcb5f2?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "description": "Blue/Pink light trails (Battle Mode Bg)"
+      }
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Install 'lucide-react' for icons.",
+    "Install 'framer-motion' for UI animations.",
+    "Add 'Chakra Petch' and 'Rajdhani' to 'index.html' or import in CSS.",
+    "Create a 'GameLayout' component that wraps the game canvas with the HUD.",
+    "Implement the 'Arena Editor' using a grid-based drag-and-drop system (no complex physics in editor, just placement).",
+    "Ensure the Game Canvas handles high-DPI (Retina) screens correctly for crisp rendering.",
+    "Use the provided hex codes for drawing on the Canvas API as well (maintain consistency between DOM UI and Canvas Game).",
+    "For the 'Level Devil' feel: Adding a subtle camera shake when the player dies is crucial."
+  ],
+  "UNIVERSAL_GUIDELINES": [
+    "Do NOT use standard HTML buttons. Use the 'GameButton' style defined above.",
+    "Do NOT use white backgrounds. Always dark.",
+    "Do NOT use serif fonts.",
+    "Every interaction (hover, click) must have visual feedback.",
+    "Use 'sonner' for in-game notifications (e.g., 'New Record!'). Style it dark."
+  ]
+}
